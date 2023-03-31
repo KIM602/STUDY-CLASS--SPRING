@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+	<bean id="student" class="com.kyk.ex0702.Student" scope="singleton">
+		<!-- singleton은 디폴트로 안적어줘도 됨 -->
+		<!-- 하나의 bean으로 여러개의 자바 객체 생성시는 scope="prototype"을 사용 -->
+		<constructor-arg value="홍길순"/>
+		<constructor-arg value="30"/>
+	</bean>
+
+</beans>

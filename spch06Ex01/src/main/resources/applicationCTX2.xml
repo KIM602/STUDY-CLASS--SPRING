@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 생성자를 이용한 멤버변수 설정시 사용하는 c:네임스페이스 사용 -->
+<!-- setter를 이용한 멤버변수 설정시 사용하는 p:네임스페이스 사용 -->
+<!-- beans에 네임스페이스 추가 (아래의 탭메뉴 namespaces를 클릭하여 선택)-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="student3" class="com.kej.ex0601.Student">
+		<constructor-arg value="홍길자" />
+		<constructor-arg value="8" />
+		<constructor-arg>
+			<list>
+				<value>줄넘기</value>
+				<value>공놀이</value>
+			</list>
+		</constructor-arg>
+		<property name="height">
+			<value>126</value>
+		</property>
+		<property name="weight" value="21"/>
+	</bean>
+	
+	
+	<!-- c:와 p: name space를 사용함 -->
+	<bean id="family" class="com.kej.ex0601.Family" c:papaName="홍아빠" c:mamiName="홍엄마" p:sisterName="홍누나">
+		<property name="brotherName" value="홍오빠" />
+	</bean>
+</beans>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+	<bean id="studentInfo" class="com.kyk.ex0501.StudentInfo">
+		<!-- 생성자로 속성(멤버변수 Student)를 설정 -->
+		<constructor-arg> <!-- 생성자의 파라메터로 멤버변수값 설정 -->
+			<ref bean="student1"></ref>
+		</constructor-arg>
+		<!-- 생성자의 파라메터가 여러개일 때 파라메터 순으로 constructor-arg사용 -->
+	</bean>
+	
+	<bean id="student1" class="com.kyk.ex0501.Student">
+		<!-- 생성자 public Student(String name, String age, String gradeNum, String classNum)를 사용하여 멤버변수 4개를 설정 -->
+		<constructor-arg>
+			<value>홍길동</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>10살</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>3학년</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>20번</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- property사용시는 set메서드를 이용해서 설정 -->
+	<bean id="student2" class="com.kyk.ex0501.Student">
+		<constructor-arg value="홍길순"/> <!-- 시작태그안의 value속성값에는 ""가 필수 -->
+		<constructor-arg value="9살"/>
+		<constructor-arg value="2학년"/>
+		<constructor-arg value="10번"/>
+	</bean>
+</beans>
+<!-- 설정파일에서 동일한 클래스의 여러개의 빈(객체)를 만들 수 있음 -->

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+
+	<bean id="student1" class="com.kej.ex0601.Student">
+		<!-- 세개의 파라미터를 가진 생성자를 사용하여 멤버변수값 설정 -->
+		<constructor-arg value="홍길동"/>
+		<constructor-arg value="20"/>
+		<constructor-arg>
+			<list>
+				<value>수영</value>
+				<value>요리</value>
+			</list>
+		</constructor-arg>
+		<!-- 나머지 2개의 멤버변수는 setter(set메서드)로 설정 -->
+		<property name="height">
+			<value>187</value>
+		</property>
+		<property name="weight" value="84"></property>
+	</bean>
+	
+	<bean id="studentInfo1" class="com.kej.ex0601.StudentInfo">
+		<!-- 멤버변수가 기본형,list,배열,String이 아닌 참조형 student -->
+		<!-- 객체형은 ref를 사용 -->
+		<property name="student">
+			<ref bean="student1"></ref>
+		</property>
+	</bean>
+
+
+
+</beans>

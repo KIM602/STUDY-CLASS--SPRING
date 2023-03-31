@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security.xsd"
+>
+	<!-- beans:beans엘리먼트(태그)안에 security설정 엘리먼트(태그) -->
+	<!-- 권한처리를 하지 않을 경로 설정 -->
+	<!--  <http pattern="/**" security="none"></http>  -->
+	<!-- 권한처리(autority) -->
+	<!-- 권한처리는 http엘리먼트를 이용 -->
+	<http auto-config="true" use-expressions="true">
+		<!-- auto-config="true"는 form기반으로 로그인하고 
+			use-expressions = "true"는 spring의 EL언어 사용-->
+		<access-denied-handler error-page="/main"/> <!-- 로그인 성공시 첫번째 페이지 --> 
+		<!-- 로그인 이후 로그인,회원가입등 권한 없는 페이지 접속 시도시 요청 경로는 main으로 해놓음-->
+		<!-- security에서는 기본적으로 iframe사용을 제한하는데 이를 풀기 위함 (headers에 추가)-->
+		<headers>
+			<frame-options disabled="true"/>
+		</headers>
+		<!-- 각 요청별 권한 지정은 intercept-url태그 사용 지정 -->
+		<!-- pattern은 요청경로 속성, access는 접근대상 지정 -->
+		<intercept-url pattern="/" access="permitAll"/> <!-- 첫페이지는 모두 접근 -->
+		<intercept-url pattern="/images/**" access="permitAll"/>
+		<intercept-url pattern="/processLogin" access="permitAll"/> <!-- 로그인 실패시 요청경로 -->
+		<intercept-url pattern="/login_view" access="isAnonymous()"/> <!-- 로그인 창 -->
+		<intercept-url pattern="/join_view" access="isAnonymous()"/>	<!-- 가입 창 -->
+		<intercept-url pattern="/join" access="isAnonymous()"/> <!-- 로그인을안한사람은 가입을 접근가능 -->
+		<intercept-url pattern="/login" access="isAnonymous()"/> <!-- 로그인을 안한사람(isAnonymous)만 접근 로그인페이지를 접근가능-->
+		<intercept-url pattern="/**" access="hasRole('ROLE_USER')" requires-channel="https"/> <!-- 로그인을 한사람 -->
+		<!-- requires-channel="https"는 https로 접근하고 hasRole('ROLE_USER')는 회원만 접근 -->
+		<!-- intercept-url 우선순위는 위에 있을수록 높음 -->	
+		<!-- isAnnoymous()나 hasRole()은 spring EL제공 메서드 -->
+		<!-- Role등급은 ROLE_USER,ROLE_ADMIB,ROLE_MANAGE 등이 있음 -->
+		
+		<!-- form-login은 로그인 관련 사항 설정 -->
+		<form-login
+			login-processing-url="/login"
+			login-page = "/login_view"
+			username-parameter="pid"
+			password-parameter="ppw"
+			default-target-url="/main"
+			authentication-failure-url="/processLogin?error=1"
+			always-use-default-target="true"
+			
+		/>
+		<!-- 
+			form-login태그는  로그인 관련 사항 설정하며 속성으로 태그안에 넣어서 처리
+			html form에서 action 속성값으로 기본값은 login 이며 이때는 action="login" 
+			login-processing-url 속성은 login요청 경로이며 login시는 생략
+			login-page 속성은 로그인창의 요청 경로
+			username-parameter는 form에서 id를 나타내는 name속성 값 input type="text name="pid"
+			default-target-url 속성은 로그인 성공시 이동할 요청경로
+			authentication-failure-url 속성은 로그인인증 실패시 요청경로
+			always-use-default-target속성은 성공시 가는 default-target-url를 확실히 보장해주기 위해 
+		 -->
+		 <!-- logout태그는 로그아웃처리(스프링에서는 로그아웃도 form을 이용해 해야함 -->
+		 <logout invalidate-session="true" logout-url="/logout"
+		 	logout-success-url="/processLogin?logout=1"
+		 	delete-cookies="JSESSIONID, remember-me"
+		 />
+		 <!-- invalidate-session="true"는 세션초기화 logout-url="/logout"은 로그아웃처리 경로
+		 	logout-sucess-url은 로그아웃 이후 요청경로
+		  -->
+		  <!-- delete-cookies는 쿠기 삭제 기본인 JSESSIONID와 remeber-me시 사용하는 remember-me는 쿠기 삭제 -->
+		  <!-- 명시적으로 로그아웃하지 않았을때 다시 사이트 이방하면 로그인상태 유지됨 -->
+		  <remember-me remember-me-parameter="remember-me" remember-me-cookie="remember-me"
+		  key="kookskey" token-validity-seconds="3600"/>
+		  
+		  <!-- CSRF(사이트 간 요청 위조, Cross-Site Request Forgery)는 다른사이트에서 페이지를 위조하여
+		  접근하는 해킹을 말하며 spring security는 이를 예방 할수 있다 -->
+		  <csrf disabled="false"/> <!-- 기본값으로 csrf예방 기능 동작 -->
+		  <!-- default는 false이며 true로 해야 ajax와 파일 업로드 됨. -->
+		  <!-- 그러나 input로 hidden으로 csrf보내면 false해도 ajax가 먹음 -->
+		  <!-- 단 file업로드시는 input으로 처리하지 않고 action뒤에 csrf를 주면 되고 form이 아닌 링크 a 는 get방식으로 ajax로 보냄 -->
+		
+		
+	</http>
+	
+	<!-- DB이용 인증처리(authentication) -->
+	<authentication-manager>
+		<authentication-provider user-service-ref="customUserDetailService">
+			<password-encoder ref="passwordEncoder"></password-encoder>
+		</authentication-provider>
+	</authentication-manager>
+	<!-- 인증처리 클래스로 UserDetailsService인터페이스를 구현한 클래스로 개발자가 만듬 -->
+	<beans:bean id = "customUserDetailService" class="com.osm.sec.security.CustomUserDetailsService" />
+	<!-- 패스워드 암호화 처리 빈 -->
+	<beans:bean id = "passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+		
+</beans:beans>

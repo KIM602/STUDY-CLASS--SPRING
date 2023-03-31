@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+<context:annotation-config/> <!-- bean 정의가 어노테이션(@)을 사용하여 만들시 -->
+<bean id="student" class="com.kyk.ex0701.Student">
+	<constructor-arg value="홍길순"></constructor-arg>
+	<constructor-arg value="30"/>
+</bean>
+<bean id="otherStudent" class="com.kyk.ex0701.OtherStudent">
+	<constructor-arg value="홍길자"/>
+	<constructor-arg value="50"/>
+</bean>
+
+</beans>

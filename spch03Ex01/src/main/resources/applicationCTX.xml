@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+	<bean id="calculator" class="com.kyk.ex0301.Calculator"></bean>
+	<!-- id는 객체명, class는 해당 클래스로 패키지까지 포함 -->
+	<!-- bean안에 속성(멤버변수를 설정) -->
+	<!-- name속성에 멤버변수 이름 -->
+	<!-- 배열과 리스트, String을 제외한 객체값 설정시는 ref태그와 bean속성을 사용 -->
+	<!-- 기본형과 String은 property의 value속성으로 값을 줌 -->
+	<bean id="myCalculator" class="com.kyk.ex0301.MyCalculator">
+		<property name="calculator">
+			<ref bean="calculator"></ref>
+		</property>
+		<property name="firstNum" value="10"></property>
+		<property name="secondNum" value="2"/>
+	</bean>
+</beans>
+<!-- spring은 IOC컨테이너의 설정 파일로 객체를 만듬 -->

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.kyk.batisDyn.dao.IDao">
+	<!-- if문은 jstl처럼 조건을 test="비교연산, 논리연산"에 넣어서 사용 -->
+	<!-- sql에서는 =은 동등비교 -->
+	<select id="selectTest1" resultType="saple.mybatis.TestTable">
+		SELECT * FROM test_table WHERE string_value='hoge'
+		<if test="number_value != null">
+				AND number_value = #{numberValue}
+		</if>
+	</select>
+	<!-- 다중 조건 처리 -->
+	<!-- JSTL처럼 choose, when, otherwise로 처리 -->
+	<select id="selectTest2" resultType="sample.mybatis.TestTable">
+		SELECT * FROM TEST_TABLE
+		<choose>
+			<when test="value == null">
+				where value is null
+			</when>
+			<otherwise>
+				where value = #{value}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- where태그는 내부 엘리먼트가 참일시에는 where절을 사용하게함 
+			단, 안에있는 AND나 OR는 앞에 참인 엘리먼트가 없으면 자동 삭제처리 -->
+	<select id="selectTest3" resultType="sample.mybatis.TestTable">
+		SELECT * FROM TEST_TABLE
+		<where>
+			<if test="string != null">
+				and string = ${string}
+			</if>
+			<if test="number != null">
+				and number = ${number}
+			</if>
+		</where>
+		<!-- 두개 모두 참이면 SELECT * FROM TEST_TABLE WHERE STRING = #{STRING} AND NUMBER = #{NUMBER}-->
+	</select>
+	
+	<!-- where대신 trim을 사용하여 맨처음에 오는 AND|OR만 제거 -->
+	<!-- 문장 뒤에 나올 SQL명령어를 prifix에 지정, trim에서 맨처음 처리되는 문장에서 삭제할 연산자는
+				prefixOverrides에 지정 -->
+	<select id="selectTest4" resultType="sample.mybatis.TestTable">
+		SELECT * FROM TEST_TABLE
+		<trim prefix="where" prefixOverrides="AND/OR">
+			<if test="string != null">
+				and string = ${string}
+			</if>
+			<if test="number != null">
+				and number = ${number}
+			</if>
+		</trim>
+	</select>
+	
+	<!-- 조건에 따라 update의 set문 추가, 제일 마지막의 ,를 제거 -->
+	<update id="updateTest1">
+		update test_table
+		<set>
+			<if test="string != null">
+				string = #{string},
+			</if>
+			<if test="number != null">
+				number = #{number},
+			</if>
+		</set>
+	</update>
+	
+	<!-- trim으로 set태그를 대체 -->
+	<update id="updateTest2">
+		update test_table
+		<trim prefix="set" suffixOverrides=",">
+			<if test="string != null">
+				string = #{string},
+			</if>
+			<if test="number != null">
+				number = #{number},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+	
+	<!-- foreach는 파라메터로 전달받은 값이 list이거나 map일 경우, 그 원소를 반복해서 추출할 시 사용 -->
+	<!-- list나 map일 때는 파라메터 미정의도 가능 -->
+	<select id="selectTest5" resultType="sample.mybatis.TestTable">
+		select * from test_table
+		where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			<!-- collection에는 컬렉션객체명, item에는 collection구성 원소 -->
+			<!-- open은 값을 열거시 ( 값1, 값2, 값3 ... )  -->
+			<!-- 파라메터값이 Arrays.asList(1, 3, 5)같은 경우에 적용 -->
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 임시변수를 bind태그로 만들어 #{변수}로 사용 -->
+	<!-- 임시변수 parameter를 "'@@@' + _parameter + '@@@'"값으로 지정 -->
+	<!-- _parameter는 전달받은 파라메터 값 -->
+	<select id="selectTest6" resultType="sample.mybatis.TestTable">
+		<bind name="parameter" value="'@@@' + _parameter + '@@@'"/>
+		select * from test_table
+		where value=#{parameter}
+	</select>
+</mapper>

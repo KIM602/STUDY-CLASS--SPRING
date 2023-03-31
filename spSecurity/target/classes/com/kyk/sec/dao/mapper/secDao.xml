@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kyk.sec.dao.ISecDao">
+	<insert id="join" parameterType="com.kyk.sec.dto.JoinDto">
+		INSERT INTO USERDB (PID, PPW, PADDRESS, PHOBBY, PPROFILE) VALUES (#{pid}, #{ppw}, #{paddress}, #{phobby}, #{pprofile})
+	</insert>
+</mapper>

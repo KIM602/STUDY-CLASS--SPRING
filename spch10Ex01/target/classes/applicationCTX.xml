@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+	<aop:aspectj-autoproxy/> <!-- java의 @Aspect클래스 사용시에 설정해야 하는 엘리먼트 -->
+	<bean id="logAop" class="com.kyk.ex1001.LogAop"></bean>
+	
+	<bean id="student" class="com.kyk.ex1001.Student">
+		<property name="name"  value="홍길동"/>
+		<property name="age" value="10"/>
+		<property name="gradeNum" value="3"/>
+		<property name="classNum" value="5"/>
+	</bean>
+	<bean id="worker" class="com.kyk.ex1001.Worker">
+		<property name="name"  value="홍길순"/>
+		<property name="age" value="35"/>
+		<property name="job" value="개발자"/>
+	</bean>
+</beans>
